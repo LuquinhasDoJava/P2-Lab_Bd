@@ -5,42 +5,42 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Clube {
 
     @Id
     @Column(length = 11)
-    private String nome;
+    private String id;
 
     @OneToMany(mappedBy = "clube")
-    private ArrayList<Curiosidade> curiosidades;
+    private List<Curiosidade> curiosidades;
 
     public Clube(){}
 
-    public Clube(String nome){
-        this.nome = nome;
+    public Clube(String id){
+        this.id = id;
     }
 
-    public Clube(String nome, ArrayList<Curiosidade> curiosidades) {
-        this.nome = nome;
+    public Clube(String id, List<Curiosidade> curiosidades) {
+        this.id = id;
         this.curiosidades = curiosidades;
     }
 
-    public String getNome() {
-        return nome;
+    public String getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public ArrayList<Curiosidade> getCuriosidades() {
+    public List<Curiosidade> getCuriosidades() {
         return curiosidades;
     }
 
-    public void setCuriosidades(ArrayList<Curiosidade> curiosidades) {
+    public void setCuriosidades(List<Curiosidade> curiosidades) {
         this.curiosidades = curiosidades;
     }
 
@@ -49,11 +49,11 @@ public class Clube {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clube clube = (Clube) o;
-        return nome != null ? nome.equals(clube.nome) : clube.nome == null;
+        return id != null ? id.equals(clube.id) : clube.id == null;
     }
 
     @Override
     public int hashCode() {
-        return nome != null ? nome.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 }

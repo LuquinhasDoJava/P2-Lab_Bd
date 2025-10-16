@@ -1,2 +1,14 @@
 C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\CampusQuestApplication.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\controller\ClubeController.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\controller\CuriosidadeController.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\controller\LoginController.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\entity\Candidato.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\entity\Clube.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\entity\Curiosidade.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\repository\CandidatoRepository.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\repository\ClubeRepository.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\repository\CuriosidadeRepository.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\service\CandidatoService.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\service\ClubeService.java
+C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\service\CuriosidadeService.java
 C:\Projetos\CampusQuest\src\main\java\com\fatez\labbd\CampusQuest\ServletInitializer.java

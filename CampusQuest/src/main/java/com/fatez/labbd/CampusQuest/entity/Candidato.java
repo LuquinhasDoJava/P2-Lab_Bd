@@ -12,8 +12,7 @@ public class Candidato {
     private String celular;
 
     @ManyToOne
-    @Column(name = "clube")
-    @JoinColumn(name = "nome")
+    @JoinColumn(name = "clube_id")
     private Clube clube;
 
     @Column(length = 100)
@@ -21,6 +20,9 @@ public class Candidato {
 
     @Column(length = 64)
     private String email;
+
+    @Column(length = 30)
+    private String bairro;
 
     @Column(length = 40)
     private String cursoInteresse;
@@ -34,13 +36,14 @@ public class Candidato {
         this.celular = celular;
     }
 
-    public Candidato(String celular, String nome, String email, String cursoInteresse, Clube clube, Timestamp horarioRegistro) {
+    public Candidato(String celular, Clube clube, String nome, String email, String cursoInteresse, Timestamp horarioRegistro, String bairro) {
         this.celular = celular;
+        this.clube = clube;
         this.nome = nome;
         this.email = email;
         this.cursoInteresse = cursoInteresse;
-        this.clube = clube;
         this.horarioRegistro = horarioRegistro;
+        this.bairro = bairro;
     }
 
     public String getCelular() {
@@ -89,6 +92,22 @@ public class Candidato {
 
     public void setHorarioRegistro(Timestamp horarioRegistro) {
         this.horarioRegistro = horarioRegistro;
+    }
+
+    public Clube getClube() {
+        return clube;
+    }
+
+    public void setClube(Clube clube) {
+        this.clube = clube;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.fatez.labbd.CampusQuest.entity;
 
-import com.fatez.labbd.CampusQuest.serializable.CuriosidadeId;
-import jakarta.persistence.EmbeddedId;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import java.util.Objects;
@@ -10,32 +11,33 @@ import java.util.Objects;
 @Entity
 public class Curiosidade {
 
-    @EmbeddedId
-    private CuriosidadeId curiosidadeId;
+    @Id
+    private int id;
 
     @ManyToOne
+    @JoinColumn(name = "clube_id")
     private Clube clube;
 
     private String descricao;
 
     public Curiosidade(){}
 
-    public Curiosidade(CuriosidadeId curiosidadeId){
-        this.curiosidadeId = curiosidadeId;
+    public Curiosidade(int id){
+        this.id = id;
     }
 
-    public Curiosidade(CuriosidadeId curiosidadeId, Clube clube, String descricao) {
-        this.curiosidadeId = curiosidadeId;
+    public Curiosidade(int id, Clube clube, String descricao) {
+        this.id = id;
         this.clube = clube;
         this.descricao = descricao;
     }
 
-    public CuriosidadeId getCuriosidadeId() {
-        return curiosidadeId;
+    public int getId() {
+        return id;
     }
 
-    public void setCuriosidadeId(CuriosidadeId curiosidadeId) {
-        this.curiosidadeId = curiosidadeId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Clube getClube() {
@@ -58,11 +60,11 @@ public class Curiosidade {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Curiosidade that = (Curiosidade) o;
-        return Objects.equals(curiosidadeId, that.curiosidadeId) && Objects.equals(clube, that.clube) && Objects.equals(descricao, that.descricao);
+        return Objects.equals(id, that.id) && Objects.equals(clube, that.clube) && Objects.equals(descricao, that.descricao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(curiosidadeId, clube, descricao);
+        return Objects.hash(id, clube, descricao);
     }
 }
