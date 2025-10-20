@@ -2,7 +2,7 @@ package com.fatez.labbd.CampusQuest.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class Candidato {
@@ -12,23 +12,23 @@ public class Candidato {
     private String celular;
 
     @ManyToOne
-    @JoinColumn(name = "clube_id")
+    @JoinColumn(name = "clube_id", nullable = false)
     private Clube clube;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String nome;
 
-    @Column(length = 64)
+    @Column(length = 64, nullable = false)
     private String email;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     private String bairro;
 
-    @Column(length = 40)
+    @Column(length = 45, nullable = false)
     private String cursoInteresse;
 
-    @Column(name = "registro")
-    private Timestamp horarioRegistro;
+    @Column(name = "registro", nullable = false)
+    private LocalDateTime horarioRegistro;
 
     public Candidato(){}
 
@@ -36,7 +36,7 @@ public class Candidato {
         this.celular = celular;
     }
 
-    public Candidato(String celular, Clube clube, String nome, String email, String cursoInteresse, Timestamp horarioRegistro, String bairro) {
+    public Candidato(String celular, Clube clube, String nome, String email, String cursoInteresse, LocalDateTime horarioRegistro, String bairro) {
         this.celular = celular;
         this.clube = clube;
         this.nome = nome;
@@ -86,11 +86,11 @@ public class Candidato {
         this.clube = clube;
     }
 
-    public Timestamp getHorarioRegistro() {
+    public LocalDateTime getHorarioRegistro() {
         return horarioRegistro;
     }
 
-    public void setHorarioRegistro(Timestamp horarioRegistro) {
+    public void setHorarioRegistro(LocalDateTime horarioRegistro) {
         this.horarioRegistro = horarioRegistro;
     }
 

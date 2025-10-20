@@ -6,27 +6,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CandidatoService {
 
     @Autowired
-    private CandidatoRepository repository;
+    private CandidatoRepository candidatoRepository;
 
-    public List<Candidato> listarTodos(){
-        return repository.findAll();
+    public List<Candidato> findByCursoInteresse(String curso) {
+        return candidatoRepository.findByCursoInteresseContainingIgnoreCase(curso);
     }
 
-    public Optional<Candidato> buscarPorId(String id){
-        return repository.findById(id);
+    public List<Candidato> findByBairro(String bairro) {
+        return candidatoRepository.findByBairroContainingIgnoreCase(bairro);
     }
 
-    public void salvar(Candidato candidato){
-        repository.save(candidato);
+    public List<Candidato> findAllOrderByCursoInteresse() {
+        return candidatoRepository.findAllByOrderByCursoInteresseAsc();
     }
 
-    public void deletar(String id){
-        repository.deleteById(id);
+    public List<Candidato> findAllOrderByBairro() {
+        return candidatoRepository.findAllByOrderByBairroAsc();
+    }
+
+    public List<Candidato> findTop10ByOrderByHorarioRegistroAsc() {
+        return candidatoRepository.findTop10ByOrderByHorarioRegistroAsc();
+    }
+
+    public List<Candidato> findTop10ByOrderByHorarioRegistroDesc() {
+        return candidatoRepository.findTop10ByOrderByHorarioRegistroDesc();
+    }
+
+    public List<String> findDistinctCursos() {
+        return candidatoRepository.findDistinctCursos();
+    }
+
+    public List<String> findDistinctBairros() {
+        return candidatoRepository.findDistinctBairros();
+    }
+
+    public long countTotalCandidatos() {
+        return candidatoRepository.count();
+    }
+
+    public boolean existePorCelular(String celular) {
+        return candidatoRepository.existsById(celular);
+    }
+
+    public void salvar(Candidato candidato) {
+        candidatoRepository.save(candidato);
+    }
+
+    public List<Candidato> findAll() {
+        return candidatoRepository.findAll();
     }
 }

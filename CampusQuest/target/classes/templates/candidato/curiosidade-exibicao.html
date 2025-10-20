@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Curiosidade do Time</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .curiosidade-card {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            margin: 20px;
+        }
+        .timer {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #ff6b6b;
+        }
+        .time-nome {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body style="background-image: url('/PlanoDeFundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;">
+<div class="curiosidade-card">
+    <h1>🎯 Curiosidade Especial</h1>
+
+    <div th:if="${clube != null}" class="time-nome" th:text="${clube.id}"></div>
+
+    <div th:if="${curiosidade != null}" style="font-size: 1.3em; line-height: 1.6; margin: 30px 0;">
+        <p th:text="${curiosidade.descricao}"></p>
+    </div>
+
+    <div th:if="${curiosidade == null}" style="color: red; font-size: 1.3em; margin: 30px 0;">
+        ❌ Nenhuma curiosidade disponível
+    </div>
+
+    <div class="timer" id="timer">
+        ⏳ Redirecionando para cadastro em: <span id="countdown">15</span> segundos
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="/candidato/escolher-time" class="btn">↻ Escolher outro time</a>
+        <a href="/candidato/cadastro" class="btn" style="background: #28a745;">📝 Ir para cadastro agora</a>
+    </div>
+</div>
+
+<script>
+    let timeLeft = 15;
+    const countdownElement = document.getElementById('countdown');
+
+    const timer = setInterval(function() {
+        timeLeft--;
+        countdownElement.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = '/candidato/cadastro';
+        }
+    }, 1000);
+</script>
+</body>
+</html>

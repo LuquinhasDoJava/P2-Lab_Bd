@@ -1,10 +1,7 @@
 package com.fatez.labbd.CampusQuest.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
@@ -12,12 +9,14 @@ import java.util.Objects;
 public class Curiosidade {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "clube_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clube_id", nullable = false)
     private Clube clube;
 
+    @Column(length = 255, nullable = false)
     private String descricao;
 
     public Curiosidade(){}
@@ -30,6 +29,12 @@ public class Curiosidade {
         this.id = id;
         this.clube = clube;
         this.descricao = descricao;
+    }
+
+    public Curiosidade(String descricao, Clube clube) {
+        this.descricao = descricao;
+        this.clube = clube;
+
     }
 
     public int getId() {
@@ -55,7 +60,6 @@ public class Curiosidade {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

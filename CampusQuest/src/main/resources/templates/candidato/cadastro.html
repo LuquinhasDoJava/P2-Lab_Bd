@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro - Campus Quest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ffeaea;
+            border-radius: 5px;
+        }
+        .success {
+            color: #27ae60;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #eaffea;
+            border-radius: 5px;
+        }
+        .time-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body style="background-image: url('/PlanoDeFundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;">
+<div class="container">
+    <h1>📝 Cadastro do Candidato</h1>
+
+    <!-- Exibir informações do time escolhido -->
+    <div th:if="${clubeEscolhido != null}" class="time-info">
+        <strong>Time escolhido:</strong>
+        <span th:text="${clubeEscolhido.id}"></span>
+    </div>
+
+    <!-- Mensagens de erro/sucesso -->
+    <div th:if="${error != null}" class="error" th:text="${error}"></div>
+    <div th:if="${success != null}" class="success" th:text="${success}"></div>
+
+    <form th:action="@{/candidato/salvar}" method="post" th:object="${candidato}">
+        <!-- Campo oculto para o clube_id -->
+        <input type="hidden" th:field="*{clube.id}" th:value="${clubeEscolhido != null ? clubeEscolhido.id : ''}">
+
+        <div class="form-group">
+            <label for="celular">📱 Celular (11 dígitos):</label>
+            <input type="text" id="celular" th:field="*{celular}"
+                   maxlength="11" placeholder="11999999999" required
+                   pattern="[0-9]{11}" title="Digite 11 números (DDD + número)">
+        </div>
+
+        <div class="form-group">
+            <label for="nome">👤 Nome Completo:</label>
+            <input type="text" id="nome" th:field="*{nome}"
+                   maxlength="100" placeholder="Seu nome completo" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">📧 E-mail:</label>
+            <input type="email" id="email" th:field="*{email}"
+                   maxlength="64" placeholder="seu.email@exemplo.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="bairro">🏠 Bairro:</label>
+            <input type="text" id="bairro" th:field="*{bairro}"
+                   maxlength="30" placeholder="Seu bairro" required>
+        </div>
+
+        <div class="form-group">
+            <label for="cursoInteresse">🎓 Curso de Interesse:</label>
+            <select id="cursoInteresse" th:field="*{cursoInteresse}" required>
+                <option value="">Selecione um curso</option>
+                <option value="Analise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas</option>
+                <option value="Comercio Exterior">Comércio Exterior</option>
+                <option value="Desenvolvimento de Produtos Plasticos">Desenvolvimento de Produtos Plásticos</option>
+                <option value="Desenvolvimento de Software Multiplataforma">Desenvolvimento de Software Multiplataforma</option>
+                <option value="Gestao de Recursos Humanos">Gestao de Recursos Humanos</option>
+                <option value="Gestao Empresarial">Gestao Empresarial</option>
+            </select>
+        </div>
+
+        <!-- Seção de Termos e Condições -->
+        <div class="termos-container">
+            <h3 style="margin-top: 0; color: #333;">📋 Termos e Condições</h3>
+
+            <div class="termos-text">
+                <p><strong>Comunicações da Fatec Zona Leste</strong></p>
+                <p>Ao marcar a caixa abaixo, você concorda em receber comunicações, informações sobre vestibular,
+                    eventos e novidades da Fatec Zona Leste através do WhatsApp, e-mail e outros meios de contato
+                    fornecidos no cadastro.</p>
+
+                <p><strong>📞 WhatsApp:</strong> Enviaremos informações sobre:</p>
+                <ul>
+                    <li>Processo seletivo e vestibular</li>
+                    <li>Datas importantes e prazos</li>
+                    <li>Eventos e workshops</li>
+                    <li>Novidades dos cursos</li>
+                </ul>
+
+                <p><strong>📧 E-mail:</strong> Receba informações completas sobre:</p>
+                <ul>
+                    <li>Editais e regulamentos</li>
+                    <li>Conteúdos preparatórios</li>
+                    <li>Oportunidades exclusivas</li>
+                </ul>
+
+                <p style="font-size: 12px; color: #888; margin-top: 15px;">
+                    <strong>Observação:</strong> Você pode cancelar o recebimento dessas comunicações a qualquer
+                    momento entrando em contato com a Fatec Zona Leste.
+                </p>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="concordaTermos" name="concordaTermos" required
+                       th:checked="${candidato != null}">
+                <label for="concordaTermos" class="checkbox-label">
+                    <strong>Concordo em receber comunicações da Fatec Zona Leste</strong> sobre vestibular,
+                    eventos e informações acadêmicas através dos meios de contato fornecidos.
+                    <span class="required">*</span>
+                </label>
+            </div>
+            <div class="field-error">É obrigatório concordar com os termos para prosseguir</div>
+        </div>
+
+        <button type="submit" class="btn">✅ Finalizar Cadastro</button>
+    </form>
+
+    <a href="/candidato/escolher-time" class="back-link">↻ Escolher outro time</a>
+</div>
+</body>
+</html>

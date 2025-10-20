@@ -3,7 +3,6 @@ package com.fatez.labbd.CampusQuest.controller;
 import com.fatez.labbd.CampusQuest.entity.Curiosidade;
 import com.fatez.labbd.CampusQuest.service.ClubeService;
 import com.fatez.labbd.CampusQuest.service.CuriosidadeService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/curiosidade")
@@ -23,71 +23,87 @@ public class CuriosidadeController {
     private CuriosidadeService curiosidadeService;
 
     @GetMapping
-    public String acessarPagina(HttpSession session, Model model, @RequestParam(required = false) String descricao, @RequestParam(required = false) String clubeId) {
-        if (session.getAttribute("usuarioAutenticado") == null ||
-                !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
-            return "redirect:/cadastraTipo";
+    public String acessarPagina(HttpSession session, Model model,
+                                @RequestParam(required = false) String descricao,
+                                @RequestParam(required = false) String clubeId) {
+        // Verificar autenticação
+        if (session.getAttribute("usuarioAutenticado") == null) {
+            return "redirect:/login";
         }
+
         List<Curiosidade> curiosidadesExibicao;
 
         if (descricao != null && !descricao.trim().isEmpty()) {
             curiosidadesExibicao = curiosidadeService.getCuriosidadePorDescricao(descricao);
-            model.addAttribute("listaCuriosidadeFiltrada", curiosidadesExibicao);
         } else if (clubeId != null && !clubeId.trim().isEmpty()) {
             curiosidadesExibicao = curiosidadeService.getCuriosidadePorClubeId(clubeId);
-            model.addAttribute("listaCuriosidadeFiltrada", curiosidadesExibicao);
         } else {
             curiosidadesExibicao = curiosidadeService.listarTodos();
         }
 
+        // ADICIONAR ESTA LINHA - Inicializar o objeto curiosidade
+        model.addAttribute("curiosidade", new Curiosidade());
         model.addAttribute("listaCuriosidadeExibicao", curiosidadesExibicao);
-        model.addAttribute("listaCuriosidade", curiosidadeService.listarTodos());
-
-        if (!model.containsAttribute("curiosidade")) {
-            model.addAttribute("curiosidade", new Curiosidade());
-        }
-
         model.addAttribute("listaClubes", clubeService.listarTodos());
-
         return "curiosidade/cadastro";
     }
 
     @GetMapping("/pesquisar")
-    public String pesquisarCuriosidades(@RequestParam(required = false) String descricao, @RequestParam(required = false) String clubeId, HttpSession session, Model model) {
+    public String pesquisarCuriosidades(HttpSession session, Model model,
+                                        @RequestParam(required = false) String descricao,
+                                        @RequestParam(required = false) String clubeId) {
         return acessarPagina(session, model, descricao, clubeId);
     }
 
-    @GetMapping("/editar/{id}")
-    public String editarCuriosidade(@PathVariable int id, Model model, HttpSession session){
-        if (session.getAttribute("usuarioAutenticado") == null ||
-                !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
-            return "redirect:/cadastraTipo";
+    // Salvar nova curiosidade
+    @PostMapping("/salvar")
+    public String salvarCuriosidade(@ModelAttribute Curiosidade curiosidade,
+                                    HttpSession session,
+                                    Model model) {
+        // Verificar autenticação
+        if (session.getAttribute("usuarioAutenticado") == null) {
+            return "redirect:/login";
         }
 
-        try{
-            Curiosidade curiosidade = curiosidadeService.buscarPorId(id).orElseThrow(() -> new EntityNotFoundException("Curiosidade não encontrada!"));
-
-            model.addAttribute("curiosidade", curiosidade);
-            model.addAttribute("listaCuriosidade", curiosidadeService.listarTodos());
-            model.addAttribute("listaClubes", clubeService.listarTodos());
-
-            return "curiosidade/cadastro";
-
-        } catch (EntityNotFoundException e){
-            model.addAttribute("error", e.getMessage());
-            return "redirect:/curiosidade";
+        try {
+            curiosidadeService.salvar(curiosidade);
+            model.addAttribute("mensagem", "Curiosidade salva com sucesso!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Erro ao salvar curiosidade: " + e.getMessage());
         }
+        return "redirect:/curiosidade";
     }
 
+    // Atualizar curiosidade existente
     @PostMapping("/salvar/{id}")
-    public String salvarCuriosidade(@ModelAttribute("curiosidade") Curiosidade curiosidade, Model model){
-        curiosidadeService.salvar(curiosidade);
-        model.addAttribute("mensagem", "Curiosidade salva com sucesso!");
-        return "redirect:/clube";
+    public String atualizarCuriosidade(@PathVariable int id,
+                                       @ModelAttribute Curiosidade curiosidade,
+                                       HttpSession session,
+                                       Model model) {
+        // Verificar autenticação
+        if (session.getAttribute("usuarioAutenticado") == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            curiosidade.setId(id);
+            curiosidadeService.salvar(curiosidade);
+            model.addAttribute("mensagem", "Curiosidade atualizada com sucesso!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Erro ao atualizar curiosidade: " + e.getMessage());
+        }
+        return "redirect:/curiosidade";
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirCuriosidade(@PathVariable int id, Model model){
+    public String excluirCuriosidade(@PathVariable int id,
+                                     HttpSession session,
+                                     Model model) {
+        // Verificar autenticação
+        if (session.getAttribute("usuarioAutenticado") == null) {
+            return "redirect:/login";
+        }
+
         try {
             curiosidadeService.deletar(id);
             model.addAttribute("mensagem", "Curiosidade excluída com sucesso!");
@@ -97,9 +113,17 @@ public class CuriosidadeController {
         return "redirect:/curiosidade";
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/cancelar")
+    public String cancelarEdicao(HttpSession session) {
+        if (session.getAttribute("usuarioAutenticado") == null) {
+            return "redirect:/login";
+        }
+        return "redirect:/curiosidade";
+    }
+
+    @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/cadastraTipo";
+        return "redirect:/login";
     }
 }

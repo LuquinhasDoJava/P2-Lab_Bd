@@ -10,28 +10,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-    @GetMapping("/cadastraTipo")
-    public String carregarPagina(){
+    @GetMapping("/login")
+    public String loginPage() {
         return "login";
     }
 
     @PostMapping("/login")
-    public String verificarLogin(@RequestParam String usuario, @RequestParam String senha, HttpSession session){
-        session.setAttribute("usuarioAutenticado", true);
-        return "redirect:/curiosidade";
-/*        if ("admin".equals(usuario) && "Jej-W+q%".equals(senha)){
+    public String login(@RequestParam String usuario,
+                        @RequestParam String senha,
+                        HttpSession session,
+                        Model model) {
+
+        if (autenticar(usuario, senha)) {
             session.setAttribute("usuarioAutenticado", true);
+            session.setAttribute("usuario", usuario);
             return "redirect:/curiosidade";
         } else {
-            return "redirect:/login?erro=true";
-        }*/
+            model.addAttribute("erro", "Usuário ou senha inválidos");
+            return "login";
+        }
     }
 
-    @GetMapping("/login")
-    public String erroDeLogin(@RequestParam(value = "erro", required = false) String erro, Model model){
-        if (erro != null){
-            model.addAttribute("erro","Usuario ou senha invalidos!!");
-        }
-        return "login";
+    private boolean autenticar(String usuario, String senha) {
+        return "admin".equals(usuario) && "123".equals(senha);
     }
 }

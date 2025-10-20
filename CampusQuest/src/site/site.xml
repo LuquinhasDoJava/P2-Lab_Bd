@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0
+                             http://maven.apache.org/xsd/decoration-1.8.0.xsd"
+         name="CampusQuest">
+
+    <bannerLeft>
+        <name>CampusQuest</name>
+        <href>index.html</href>
+    </bannerLeft>
+
+    <publishDate position="right" format="dd/MM/yyyy"/>
+
+    <version position="right"/>
+
+    <body>
+        <links>
+            <item name="GitHub" href="https://github.com/LuquinhasDoJava/P2-Lab_Bd"/>
+            <item name="FATEC" href="https://fateczl.cps.sp.gov.br/"/>
+            <item name="Spring Boot" href="https://spring.io/projects/spring-boot"/>
+        </links>
+
+        <menu name="Visão Geral" inherit="top">
+            <item name="Sobre o Projeto" href="index.html"/>
+            <item name="Funcionalidades" href="funcionalidades.html"/>
+            <item name="Tecnologias" href="tecnologias.html"/>
+        </menu>
+
+        <menu name="Documentação" inherit="top">
+            <item name="JavaDoc" href="apidocs/index.html" target="_blank"/>
+        </menu>
+
+        <menu name="Relatórios do Projeto" inherit="top">
+            <item name="Resumo" href="project-info.html"/>
+            <item name="Equipe" href="team-list.html"/>
+            <item name="Dependências" href="dependencies.html"/>
+            <item name="Plugins" href="plugins.html"/>
+            <item name="Licenças" href="licenses.html"/>
+        </menu>
+
+        <menu name="Relatórios de Build" inherit="top">
+            <item name="Relatório de Testes" href="surefire-report.html"/>
+        </menu>
+    </body>
+</project>

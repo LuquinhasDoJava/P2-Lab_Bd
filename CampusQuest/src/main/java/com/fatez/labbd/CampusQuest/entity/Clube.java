@@ -1,9 +1,6 @@
 package com.fatez.labbd.CampusQuest.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -14,7 +11,7 @@ public class Clube {
     @Column(length = 11)
     private String id;
 
-    @OneToMany(mappedBy = "clube")
+    @OneToMany(mappedBy = "clube", fetch = FetchType.LAZY)
     private List<Curiosidade> curiosidades;
 
     public Clube(){}

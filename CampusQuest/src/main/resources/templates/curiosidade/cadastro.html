@@ -35,21 +35,39 @@
             padding: 1.5rem;
             text-align: center;
         }
+        .editing {
+            background-color: #fff3cd !important;
+            border-left: 4px solid #ffc107;
+        }
     </style>
 </head>
-<body>
+<body style="background-image: url('/PlanoDeFundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;">
 <!-- Header -->
 <div class="header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
-                <h1>🏆 CampusQuest</h1>
-                <p class="lead">Gerenciamento de Curiosidades</p>
+                <h1><i class="fas fa-users me-2"></i>Consultar Candidatos</h1>
+                <p class="lead mb-0" th:text="${titulo}">Todos os Candidatos</p>
             </div>
             <div class="col-auto">
-                <form th:action="@{/curiosidade/logout}" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-outline-light">Sair</button>
-                </form>
+                <div class="btn-group">
+                    <a href="/curiosidade" class="btn btn-outline-light me-2">
+                        <i class="fas fa-star me-1"></i>Curiosidades
+                    </a>
+                    <a href="/consultaCandidatos" class="btn btn-light">
+                        <i class="fas fa-users me-1"></i>Candidatos
+                    </a>
+                    <form th:action="@{/consultaCandidatos/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-outline-light ms-2">
+                            <i class="fas fa-sign-out-alt me-1"></i>Sair
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -70,7 +88,7 @@
     <!-- Seção de Pesquisa -->
     <div class="search-container">
         <h3>🔍 Pesquisar Curiosidades</h3>
-        <form th:action="@{/curiosidade/pesquisar}" method="get" class="row g-3">
+        <form th:action="@{/curiosidade}" method="get" class="row g-3">
             <div class="col-md-5">
                 <label for="descricao" class="form-label">Buscar por Descrição</label>
                 <input type="text"
@@ -94,7 +112,7 @@
                 </select>
             </div>
             <div class="col-md-2 d-flex align-items-end">
-                <div class="d-grid gap-2">
+                <div class="d-grid gap-2 w-100">
                     <button type="submit" class="btn btn-custom">🔍 Pesquisar</button>
                     <a th:href="@{/curiosidade}" class="btn btn-secondary">🔄 Limpar</a>
                 </div>
@@ -103,29 +121,26 @@
     </div>
 
     <!-- Seção do Formulário -->
-    <div class="form-container">
-        <h2>
-            <span th:if="${curiosidade?.id != null}">✏️ Editar Curiosidade</span>
-            <span th:if="${curiosidade?.id == null}">➕ Nova Curiosidade</span>
-        </h2>
+    <div class="form-container" th:classappend="${modoEdicao} ? 'editing' : ''">
+        <h2 th:if="${modoEdicao}">✏️ Editar Curiosidade</h2>
+        <h2 th:unless="${modoEdicao}">➕ Nova Curiosidade</h2>
 
-        <form th:action="${curiosidade?.id != null} ?
-                             @{/curiosidade/salvar/{id}(id=${curiosidade.id})} :
-                             @{/curiosidade/salvar/0}"
-              method="post"
-              th:object="${curiosidade}">
-
-            <input type="hidden" th:field="*{id}" />
+        <!-- FORM SIMPLIFICADO - removendo th:field que estava causando erro -->
+        <form th:action="${modoEdicao} ?
+                         @{/curiosidade/salvar/{id}(id=${curiosidade.id})} :
+                         @{/curiosidade/salvar}"
+              method="post">
 
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
                         <label for="descricao" class="form-label">Descrição da Curiosidade</label>
-                        <textarea th:field="*{descricao}"
-                                  class="form-control"
+                        <textarea class="form-control"
                                   id="descricao"
+                                  name="descricao"
                                   rows="3"
                                   placeholder="Digite a descrição da curiosidade..."
+                                  th:text="${curiosidade?.descricao}"
                                   required></textarea>
                     </div>
                 </div>
@@ -133,14 +148,15 @@
                 <div class="col-md-4">
                     <div class="mb-3">
                         <label for="clube" class="form-label">Clube</label>
-                        <select th:field="*{clube}"
-                                class="form-select"
+                        <select class="form-select"
                                 id="clube"
+                                name="clube.id"
                                 required>
                             <option value="">Selecione um clube...</option>
                             <option th:each="clube : ${listaClubes}"
-                                    th:value="${clube}"
-                                    th:text="${clube.id}">
+                                    th:value="${clube.id}"
+                                    th:text="${clube.id}"
+                                    th:selected="${curiosidade?.clube?.id == clube.id}">
                             </option>
                         </select>
                     </div>
@@ -149,15 +165,12 @@
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-success">
-                    <span th:if="${curiosidade?.id != null}">💾 Atualizar</span>
-                    <span th:if="${curiosidade?.id == null}">💾 Salvar</span>
+                    <span th:if="${modoEdicao}">💾 Atualizar</span>
+                    <span th:unless="${modoEdicao}">💾 Salvar Curiosidade</span>
                 </button>
-
-                <a th:if="${curiosidade?.id != null}"
-                   th:href="@{/curiosidade}"
-                   class="btn btn-secondary">
-                    ➕ Novo
-                </a>
+                <a th:if="${modoEdicao}"
+                   th:href="@{/curiosidade/cancelar}"
+                   class="btn btn-secondary">❌ Cancelar</a>
             </div>
         </form>
     </div>
@@ -167,15 +180,11 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>
                 📚 Lista de Curiosidades
-                <small th:if="${listaCuriosidadeFiltrada != null}" class="text-muted">
-                    (Filtrado: <span th:text="${#lists.size(listaCuriosidadeFiltrada)}"></span> resultados)
+                <small class="text-muted">
+                    (<span th:text="${#lists.size(listaCuriosidadeExibicao)}"></span>
+                    <span th:text="${#lists.size(listaCuriosidadeExibicao) == 1} ? 'registro' : 'registros'"></span>)
                 </small>
             </h2>
-            <div>
-                <a th:href="@{/curiosidade/exportar}" class="btn btn-outline-primary btn-sm">
-                    📥 Exportar
-                </a>
-            </div>
         </div>
 
         <!-- Tabela de Curiosidades -->
@@ -187,7 +196,7 @@
                         <th>#</th>
                         <th>Descrição</th>
                         <th>Clube</th>
-                        <th width="120">Ações</th>
+                        <th width="150">Ações</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -201,15 +210,14 @@
                             <div class="btn-group" role="group">
                                 <!-- Botão Editar -->
                                 <a th:href="@{/curiosidade/editar/{id}(id=${curiosidade.id})}"
-                                   class="btn btn-warning btn-sm">
-                                    ✏️
-                                </a>
+                                   class="btn btn-warning btn-sm">✏️ Editar</a>
+
                                 <!-- Botão Excluir -->
                                 <form th:action="@{/curiosidade/excluir/{id}(id=${curiosidade.id})}"
                                       method="post"
                                       style="display: inline;"
                                       th:onsubmit="return confirm('Tem certeza que deseja excluir esta curiosidade?')">
-                                    <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
                                 </form>
                             </div>
                         </td>
@@ -219,14 +227,13 @@
             </div>
         </div>
 
-        <!-- Mensagem quando não há curiosidades -->
         <div th:if="${#lists.isEmpty(listaCuriosidadeExibicao)}" class="text-center py-4">
             <div class="text-muted">
                 <h5>📝 Nenhuma curiosidade encontrada</h5>
-                <p th:if="${listaCuriosidadeFiltrada != null}">
+                <p th:if="${param.descricao != null or param.clubeId != null}">
                     Tente ajustar os critérios de pesquisa ou <a th:href="@{/curiosidade}">limpar os filtros</a>.
                 </p>
-                <p th:if="${listaCuriosidadeFiltrada == null}">
+                <p th:if="${param.descricao == null and param.clubeId == null}">
                     Use o formulário acima para adicionar a primeira curiosidade!
                 </p>
             </div>
@@ -236,5 +243,18 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Fechar automaticamente os alerts após 5 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    });
+</script>
 </body>
 </html>
