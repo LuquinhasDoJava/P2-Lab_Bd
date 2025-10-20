@@ -24,8 +24,8 @@ public class CuriosidadeController {
 
     @GetMapping
     public String acessarPagina(HttpSession session, Model model,
-                                @RequestParam(required = false) String descricao,
-                                @RequestParam(required = false) String clubeId) {
+                                @RequestParam(value = "descricao", required = false) String descricao,
+                                @RequestParam(value = "clubeId", required = false) String clubeId) {
         // Verificar autenticação
         if (session.getAttribute("usuarioAutenticado") == null) {
             return "redirect:/login";
@@ -50,8 +50,8 @@ public class CuriosidadeController {
 
     @GetMapping("/pesquisar")
     public String pesquisarCuriosidades(HttpSession session, Model model,
-                                        @RequestParam(required = false) String descricao,
-                                        @RequestParam(required = false) String clubeId) {
+                                        @RequestParam(value = "descricao", required = false) String descricao,
+                                        @RequestParam(value = "clubeId", required = false) String clubeId) {
         return acessarPagina(session, model, descricao, clubeId);
     }
 
@@ -76,7 +76,7 @@ public class CuriosidadeController {
 
     // Atualizar curiosidade existente
     @PostMapping("/salvar/{id}")
-    public String atualizarCuriosidade(@PathVariable int id,
+    public String atualizarCuriosidade(@PathVariable("id") int id,
                                        @ModelAttribute Curiosidade curiosidade,
                                        HttpSession session,
                                        Model model) {
@@ -96,7 +96,7 @@ public class CuriosidadeController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirCuriosidade(@PathVariable int id,
+    public String excluirCuriosidade(@PathVariable("id") int id,
                                      HttpSession session,
                                      Model model) {
         // Verificar autenticação

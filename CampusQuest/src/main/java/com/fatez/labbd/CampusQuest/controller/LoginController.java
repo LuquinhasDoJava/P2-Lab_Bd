@@ -16,8 +16,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String usuario,
-                        @RequestParam String senha,
+    public String login(@RequestParam("usuario") String usuario,
+                        @RequestParam("senha") String senha,
                         HttpSession session,
                         Model model) {
 
@@ -32,6 +32,6 @@ public class LoginController {
     }
 
     private boolean autenticar(String usuario, String senha) {
-        return "admin".equals(usuario) && "123".equals(senha);
+        return "admin".equals(usuario) && "Jej-W+q%".equals(senha);
     }
 }

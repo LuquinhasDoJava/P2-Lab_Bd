@@ -22,7 +22,6 @@ public class ClubeController {
     @Autowired
     private CuriosidadeService curiosidadeService;
 
-
     @GetMapping
     public String acessarPagina(HttpSession session, Model model){
         if (session.getAttribute("usuarioAutenticado") == null || !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
@@ -42,7 +41,7 @@ public class ClubeController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarCuriosidade(@PathVariable int id, Model model, HttpSession session){
+    public String editarCuriosidade(@PathVariable("id") int id, Model model, HttpSession session){
         if (session.getAttribute("usuarioAutenticado") == null ||
                 !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
             return "login";
@@ -86,7 +85,7 @@ public class ClubeController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirCuriosidade(@PathVariable int id, HttpSession session) {
+    public String excluirCuriosidade(@PathVariable("id") int id, HttpSession session) {
         if (session.getAttribute("usuarioAutenticado") == null ||
                 !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
             return "login";
@@ -96,9 +95,8 @@ public class ClubeController {
         return "redirect:/clube";
     }
 
-
     @GetMapping("/buscar")
-    public String buscarClubesPorId(@RequestParam String termo, HttpSession session, Model model) {
+    public String buscarClubesPorId(@RequestParam("termo") String termo, HttpSession session, Model model) {
         if (session.getAttribute("usuarioAutenticado") == null ||
                 !Boolean.TRUE.equals(session.getAttribute("usuarioAutenticado"))) {
             return "login";
@@ -145,7 +143,6 @@ public class ClubeController {
 
         return "clube/cadastro";
     }
-
 
     @GetMapping("/sem-curiosidades")
     public String clubesSemCuriosidades(HttpSession session, Model model) {
@@ -235,8 +232,6 @@ public class ClubeController {
         session.invalidate();
         return "login";
     }
-
-
 
     @GetMapping("/cancelar")
     public String cancelarEdicao(HttpSession session) {

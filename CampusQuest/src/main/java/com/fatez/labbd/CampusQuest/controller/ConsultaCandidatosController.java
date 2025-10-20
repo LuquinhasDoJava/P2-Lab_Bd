@@ -22,10 +22,10 @@ public class ConsultaCandidatosController {
 
     @GetMapping
     public String listarCandidatos(HttpSession session, Model model,
-                                   @RequestParam(required = false) String curso,
-                                   @RequestParam(required = false) String bairro,
-                                   @RequestParam(required = false) String ordenarPor,
-                                   @RequestParam(required = false) String tipoConsulta) {
+                                   @RequestParam(value = "curso", required = false) String curso,
+                                   @RequestParam(value = "bairro", required = false) String bairro,
+                                   @RequestParam(value = "ordernarPor", required = false) String ordenarPor,
+                                   @RequestParam(value = "tipoConsulta", required = false) String tipoConsulta) {
 
         if (session.getAttribute("usuarioAutenticado") == null) {
             return "login";
@@ -95,12 +95,12 @@ public class ConsultaCandidatosController {
     }
 
     @GetMapping("/curso")
-    public String consultarPorCurso(@RequestParam String curso, HttpSession session, Model model) {
+    public String consultarPorCurso(@RequestParam("curso") String curso, HttpSession session, Model model) {
         return listarCandidatos(session, model, curso, null, null, null);
     }
 
     @GetMapping("/bairro")
-    public String consultarPorBairro(@RequestParam String bairro, HttpSession session, Model model) {
+    public String consultarPorBairro(@RequestParam("bairro") String bairro, HttpSession session, Model model) {
         return listarCandidatos(session, model, null, bairro, null, null);
     }
 
@@ -127,6 +127,6 @@ public class ConsultaCandidatosController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/cadastraTipo";
+        return "redirect:/";
     }
 }

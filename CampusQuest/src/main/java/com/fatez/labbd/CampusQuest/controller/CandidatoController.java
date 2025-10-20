@@ -34,7 +34,7 @@ public class CandidatoController {
     }
 
     @PostMapping("/mostrar-curiosidade")
-    public String mostrarCuriosidade(@RequestParam String clubeId, Model model, HttpSession session){
+    public String mostrarCuriosidade(@RequestParam("clubeId") String clubeId, Model model, HttpSession session){
         try{
             session.setAttribute("clubeEscolhidoId", clubeId);
             Curiosidade curiosidade = curiosidadeService.getCuriosidadeAleatoria(clubeId);
